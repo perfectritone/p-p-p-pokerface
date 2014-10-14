@@ -1,10 +1,17 @@
 (ns p-p-p-pokerface)
 
-(defn rank [card]
-  nil)
+(defn suit [[_ suit_var]]
+  (str suit_var))
 
-(defn suit [card]
-  nil)
+(defn rank [[rank_var _]]
+  (if (Character/isDigit rank_var)
+    (Integer/valueOf rank_var)
+    (let [exceptional_ranks {\T 10
+                             \J 11
+                             \Q 12
+                             \K 13
+                             \A 14}]
+      (get exceptional_ranks rank_var))))
 
 (defn pair? [hand]
   nil)
