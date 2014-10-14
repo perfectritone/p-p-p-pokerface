@@ -5,7 +5,7 @@
 
 (defn rank [[rank_var _]]
   (if (Character/isDigit rank_var)
-    (Integer/valueOf rank_var)
+    (Integer/valueOf (str rank_var))
     (let [exceptional_ranks {\T 10
                              \J 11
                              \Q 12
@@ -14,7 +14,7 @@
       (get exceptional_ranks rank_var))))
 
 (defn pair? [hand]
-  nil)
+  (contains? 2 (vals (frequencies (map rank hand)))))
 
 (defn three-of-a-kind? [hand]
   nil)
