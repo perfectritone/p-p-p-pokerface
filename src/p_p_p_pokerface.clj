@@ -13,29 +13,52 @@
                              \A 14}]
       (get exceptional_ranks rank_var))))
 
+(defn card-frequencies [hand]
+  (vals (frequencies (map rank hand))))
+
 (defn pair? [hand]
-  (contains? 2 (vals (frequencies (map rank hand)))))
+  (>= (apply max (card-frequencies hand)) 2))
 
 (defn three-of-a-kind? [hand]
-  nil)
+  (>= (apply max (card-frequencies hand)) 3))
 
 (defn four-of-a-kind? [hand]
-  nil)
+  (>= (apply max (card-frequencies hand)) 4))
 
 (defn flush? [hand]
-  nil)
+  (== 1 (count (set (map suit hand)))))
 
 (defn full-house? [hand]
-  nil)
+  (=
+    [2 3]
+    (sort
+      (card-frequencies hand))))
 
 (defn two-pairs? [hand]
-  nil)
+  (=
+    [1 2 2]
+    (sort
+      (card-frequencies hand))))
+
+(defn iterative-seq? [i-seq]
+  (= (range (first i-seq) (inc (last i-seq))) i-seq))
 
 (defn straight? [hand]
-  nil)
+  (or
+    (iterative-seq? (sort (map rank hand)))
+    (iterative-seq? (sort (replace {14 1} (map rank hand))))))
 
 (defn straight-flush? [hand]
-  nil)
+  (and (straight? hand) (flush? hand)))
 
 (defn value [hand]
-  nil)
+  (cond
+    (straight-flush? hand) 8
+    (four-of-a-kind? hand) 7
+    (full-house? hand) 6
+    (flush? hand) 5
+    (straight? hand) 4
+    (three-of-a-kind? hand) 3
+    (two-pairs? hand) 2
+    (pair? hand) 1
+    :else 0))
